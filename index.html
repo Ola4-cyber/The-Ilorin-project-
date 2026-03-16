@@ -1,0 +1,1233 @@
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ilorin Project | History Archive</title>
+    
+    <!-- Quill.js Rich Text Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2691E;
+            --bg-color: #FDFBF7;
+            --text-color: #2C2C2C;
+            --accent-color: #E8DCC4;
+            --danger-color: #c0392b;
+            --success-color: #27ae60;
+            --font-heading: 'Georgia', serif;
+            --font-body: 'Helvetica Neue', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-body); line-height: 1.6; }
+        .hidden { display: none !important; }
+        
+        /* Buttons */
+        .btn { padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-secondary { background-color: #95a5a6; color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        .btn-sm { padding: 5px 12px; font-size: 0.85rem; }
+
+        /* Header */
+        header { background-color: var(--primary-color); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { font-family: var(--font-heading); font-size: 1.5rem; font-weight: bold; }
+        nav ul { list-style: none; display: flex; gap: 20px; flex-wrap: wrap; }
+        nav a { color: white; text-decoration: none; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+
+        /* Hero */
+        .hero { 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Ilorin_Emir%27s_Palace.jpg/1200px-Ilorin_Emir%27s_Palace.jpg'); 
+            background-size: cover; background-position: center; 
+            height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; 
+        }
+        .hero h1 { font-family: var(--font-heading); font-size: 3rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; max-width: 700px; }
+
+        /* Container & Grid */
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .section-title { font-family: var(--font-heading); text-align: center; font-size: 2.5rem; margin-bottom: 40px; color: var(--primary-color); position: relative; }
+        .section-title::after { content: ''; display: block; width: 60px; height: 3px; background-color: var(--secondary-color); margin: 10px auto; }
+        
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .history-card { background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .history-card:hover { transform: translateY(-5px); }
+        .card-image { width: 100%; height: 200px; object-fit: cover; background-color: #eee; }
+        .card-date { background-color: var(--accent-color); padding: 5px 15px; font-weight: bold; color: var(--primary-color); font-size: 0.9rem; }
+        .card-content { padding: 20px; }
+        .card-content h3 { font-family: var(--font-heading); color: var(--primary-color); margin: 10px 0; }
+        .card-content img { max-width: 100%; height: auto; border-radius: 4px; margin: 10px 0; }
+        .loading { text-align: center; padding: 40px; font-style: italic; color: #666; grid-column: 1/-1; }
+
+        /* Rich Text Editor */
+        .ql-editor { min-height: 200px; font-size: 1rem; }
+        .ql-toolbar { border-color: #ccc !important; }
+        .ql-container { border-color: #ccc !important; border-radius: 0 0 4px 4px; }
+
+        /* Image Upload */
+        .image-upload-area { 
+            border: 2px dashed #ccc; border-radius: 8px; padding: 20px; text-align: center; 
+            background-color: #fafafa; cursor: pointer; transition: border-color 0.3s; margin: 10px 0;
+        }
+        .image-upload-area:hover { border-color: var(--primary-color); }
+        .image-upload-area.dragover { border-color: var(--secondary-color); background-color: #fff8e1; }
+        .image-preview { max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 4px; display: none; }
+        .upload-progress { width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-top: 10px; overflow: hidden; display: none; }
+        .upload-progress-bar { height: 100%; background: var(--success-color); width: 0%; transition: width 0.3s; }
+
+        /* Admin Panel */
+        .admin-bar { background-color: #333; color: white; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .admin-container { max-width: 1200px; margin: 30px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .admin-tab { padding: 10px 20px; background: #eee; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; }
+        .admin-tab.active { background: var(--primary-color); color: white; }
+        
+        .post-table { width: 100%; border-collapse: collapse; margin-top: 20px; overflow-x: auto; display: block; }
+        .post-table th, .post-table td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; vertical-align: top; }
+        .post-table th { background-color: var(--accent-color); color: var(--primary-color); position: sticky; top: 0; }
+        .post-table img { max-width: 80px; max-height: 60px; object-fit: cover; border-radius: 4px; }
+        .action-btn { padding: 5px 10px; font-size: 0.8rem; margin: 2px; }
+
+        /* Modal */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #666; }
+        .close-modal:hover { color: var(--danger-color); }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color); }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+        /* Login */
+        .login-screen { height: 100vh; display: flex; justify-content: center; align-items: center; background: var(--bg-color); }
+        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); text-align: center; width: 100%; max-width: 400px; }
+        .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        
+        /* Submission Form (Public) */
+        .submit-section { background-color: var(--accent-color); padding: 40px; border-radius: 8px; margin: 40px 0; }
+        .submit-section .form-group label { color: var(--primary-color); }
+        
+        /* Footer */
+        footer { background-color: #222; color: #aaa; text-align: center; padding: 25px 20px; margin-top: 60px; }
+        .admin-link { color: #777; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: color 0.2s; }
+        .admin-link:hover { color: white; }
+        
+        /* Status Messages */
+        .status-msg { margin-top: 10px; padding: 10px; border-radius: 4px; font-size: 0.9rem; }
+        .status-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        /* Submission Badge */
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .badge-pending { background-color: #ffc107; color: #212529; }
+        .badge-approved { background-color: var(--success-color); color: white; }
+        .badge-rejected { background-color: var(--danger-color); color: white; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .admin-header { flex-direction: column; align-items: flex-start; }
+            .post-table { font-size: 0.9rem; }
+            .post-table th, .post-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= PUBLIC VIEW ================= -->
+    <div id="public-view">
+        <header>
+            <div class="logo">🏛️ THE ILORIN PROJECT</div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showSection('home')">Home</a></li>
+                    <li><a href="#archive">Archive</a></li>
+                    <li><a href="#submit-story">Share Your Story</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <h1>Gateway to the North</h1>
+            <p>Preserving the rich cultural tapestry, oral traditions, and historical milestones of Ilorin, Kwara State.</p>
+            <a href="#archive" class="btn btn-primary" style="margin-top: 20px;">Explore History</a>
+        </section>
+
+        <div class="container" id="archive">
+            <h2 class="section-title">Historical Archives</h2>
+            <div id="loading-public" class="loading">Loading history...</div>
+            <div class="history-grid" id="public-grid"></div>
+        </div>
+
+        <!-- Public Submission Form -->
+        <div class="container" id="submit-story">
+            <div class="submit-section">
+                <h2 class="section-title">Share Your Story</h2>
+                <p style="text-align: center; margin-bottom: 25px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                    Do you have an oral history, photograph, or personal story about Ilorin? 
+                    Submit it for review by our historians.
+                </p>
+                
+                <form id="public-submission-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Your Name *</label>
+                            <input type="text" id="submit-name" required placeholder="e.g. Alhaji Musa">
+                        </div>
+                        <div class="form-group">
+                            <label>Email (Optional)</label>
+                            <input type="email" id="submit-email" placeholder="for follow-up">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Historical Period/Year *</label>
+                            <input type="text" id="submit-date" required placeholder="e.g. 1960s, Pre-colonial">
+                        </div>
+                        <div class="form-group">
+                            <label>Story Title *</label>
+                            <input type="text" id="submit-title" required placeholder="e.g. My Grandfather's Market">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Your Story *</label>
+                        <div id="public-quill-editor"></div>
+                        <input type="hidden" id="submit-content">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Image (Optional)</label>
+                        <div class="image-upload-area" id="public-drop-zone">
+                            <p>📷 Click or drag an image here</p>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">JPG, PNG up to 5MB</p>
+                            <input type="file" id="public-image-input" accept="image/*" style="display: none;">
+                        </div>
+                        <img id="public-image-preview" class="image-preview">
+                        <div class="upload-progress" id="public-upload-progress">
+                            <div class="upload-progress-bar" id="public-progress-bar"></div>
+                        </div>
+                        <input type="hidden" id="submit-image-url">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="submit-consent" required style="width: auto; margin-right: 8px;">
+                            I confirm this story is based on true events or oral tradition, and I grant permission for it to be published.
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success" id="submit-btn">
+                        📤 Submit for Review
+                    </button>
+                    <p id="submit-status" class="status-msg hidden"></p>
+                </form>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <span id="year"></span> The Ilorin Project. Dedicated to Preserving Heritage.</p>
+            <br>
+            <span class="admin-link" onclick="showLogin()">🔐 Admin Access</span>
+        </footer>
+    </div>
+
+    <!-- ================= ADMIN VIEW ================= -->
+    <div id="admin-view" class="hidden">
+        <div class="admin-bar">
+            <div class="logo">🛠️ ADMIN DASHBOARD</div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span id="admin-email" style="font-size: 0.9rem;"></span>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="admin-container">
+            <div class="admin-header">
+                <h2>Content Management</h2>
+                <button class="btn btn-success" onclick="openPostModal()">+ New Published Post</button>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="posts" onclick="switchAdminTab('posts')">📚 Published Posts</button>
+                <button class="admin-tab" data-tab="submissions" onclick="switchAdminTab('submissions')">📬 Pending Submissions (<span id="pending-count">0</span>)</button>
+            </div>
+
+            <!-- Published Posts Tab -->
+            <div id="tab-posts">
+                <div id="loading-admin-posts" class="loading">Loading posts...</div>
+                <div style="overflow-x: auto;">
+                    <table class="post-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Preview</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-posts-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Submissions Tab -->
+            <div id="tab-submissions" class="hidden">
+                <div id="loading-admin-subs" class="loading">Loading submissions...</div>
+                <div style="overflow-x: auto;">
+                    <table class="post-table">
+                        <thead>
+                            <tr>
+                                <th>Submitter</th>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Preview</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-subs-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= LOGIN VIEW ================= -->
+    <div id="login-view" class="hidden login-screen">
+        <div class="login-box">
+            <h2 style="margin-bottom: 20px; color: var(--primary-color);">🔐 Admin Access</h2>
+            <input type="email" id="login-email" placeholder="Admin Email">
+            <input type="password" id="login-password" placeholder="Password">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="handleLogin()" id="login-btn">Login</button>
+            <p id="login-error" class="status-msg status-error hidden">❌ Invalid email or password</p>
+            <br>
+            <button class="btn btn-secondary" style="background: transparent; color: #666;" onclick="showPublic()">← Back to Public Site</button>
+        </div>
+    </div>
+
+    <!-- ================= POST MODAL (Create/Edit) ================= -->
+    <div id="post-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('post-modal')">&times;</span>
+            <h2 id="modal-title" style="margin-bottom: 20px; color: var(--primary-color);">Create Post</h2>
+            
+            <input type="hidden" id="post-id">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Historical Period/Year *</label>
+                    <input type="text" id="post-date" placeholder="e.g. 1823, Pre-colonial">
+                </div>
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="post-title" placeholder="e.g. The Jihad of 1823">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Content (Rich Text) *</label>
+                <div id="admin-quill-editor"></div>
+                <input type="hidden" id="post-content">
+            </div>
+            
+            <div class="form-group">
+                <label>Featured Image (Optional)</label>
+                <div class="image-upload-area" id="admin-drop-zone">
+                    <p>📷 Click or drag an image here</p>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">JPG, PNG up to 5MB</p>
+                    <input type="file" id="admin-image-input" accept="image/*" style="display: none;">
+                </div>
+                <img id="admin-image-preview" class="image-preview">
+                <div class="upload-progress" id="admin-upload-progress">
+                    <div class="upload-progress-bar" id="admin-progress-bar"></div>
+                </div>
+                <input type="hidden" id="post-image-url">
+                <p id="image-error" class="status-msg status-error hidden"></p>
+            </div>
+            
+            <button class="btn btn-primary" onclick="savePost()" id="save-btn">💾 Save Post</button>
+            <p id="save-status" class="status-msg"></p>
+        </div>
+    </div>
+
+    <!-- ================= SUBMISSION REVIEW MODAL ================= -->
+    <div id="review-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close-modal" onclick="closeModal('review-modal')">&times;</span>
+            <h2 style="margin-bottom: 20px; color: var(--primary-color);">📋 Review Submission</h2>
+            
+            <input type="hidden" id="review-id">
+            
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <p><strong>Submitted by:</strong> <span id="review-name"></span></p>
+                <p><strong>Email:</strong> <span id="review-email">N/A</span></p>
+                <p><strong>Period:</strong> <span id="review-date"></span></p>
+                <p><strong>Title:</strong> <span id="review-title"></span></p>
+                <p><strong>Submitted:</strong> <span id="review-submitted"></span></p>
+            </div>
+            
+            <div class="form-group">
+                <label>Story Content</label>
+                <div id="review-content" style="border: 1px solid #ddd; padding: 15px; border-radius: 4px; background: white; min-height: 150px;"></div>
+            </div>
+            
+            <div class="form-group" id="review-image-group">
+                <label>Attached Image</label>
+                <img id="review-image" style="max-width: 100%; max-height: 300px; border-radius: 4px; display: none;">
+                <p id="review-no-image" style="color: #666; font-style: italic;">No image attached</p>
+            </div>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+                <button class="btn btn-success" onclick="approveSubmission()">✅ Approve & Publish</button>
+                <button class="btn btn-danger" onclick="rejectSubmission()">❌ Reject</button>
+                <button class="btn btn-secondary" onclick="closeModal('review-modal')">Cancel</button>
+            </div>
+            <p id="review-status" class="status-msg"></p>
+        </div>
+    </div>
+
+    <!-- ================= FIREBASE & LIBRARIES ================= -->
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, collection, addDoc, updateDoc, deleteDoc, 
+            doc, onSnapshot, query, orderBy, serverTimestamp, getDoc 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { 
+            getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAW0wuRcUUhBeDEJOV2SQ-mFNpbSohSjFo",
+            authDomain: "ping-1dabf.firebaseapp.com",
+            projectId: "ping-1dabf",
+            storageBucket: "ping-1dabf.firebasestorage.app",
+            messagingSenderId: "613306076006",
+            appId: "1:613306076006:web:c85ec3920a1831584816a7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+        
+        const postsCollection = collection(db, "posts");
+        const submissionsCollection = collection(db, "submissions");
+
+        // Global State
+        let currentUser = null;
+        let unsubscribePosts = null;
+        let unsubscribeSubs = null;
+        let publicQuill, adminQuill;
+        let publicUploadTask, adminUploadTask;
+        let publicSelectedFile = null, adminSelectedFile = null;
+
+        // ================= AUTH =================
+        window.handleLogin = async function() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+            const error = document.getElementById('login-error');
+
+            if (!email || !password) {
+                error.textContent = "Please enter email and password";
+                error.classList.remove('hidden');
+                return;
+            }
+
+            btn.disabled = true;
+            error.classList.add('hidden');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged handles view switch
+            } catch (err) {
+                console.error("Login error:", err);
+                error.textContent = err.message.includes('auth/invalid') ? "Invalid credentials" : "Login failed: " + err.message;
+                error.classList.remove('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+                showPublic();
+            } catch (err) {
+                console.error("Logout error:", err);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                document.getElementById('admin-email').textContent = user.email;
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('public-view').classList.add('hidden');
+                document.getElementById('admin-view').classList.remove('hidden');
+                loadPublishedPosts();
+                loadSubmissions();
+            } else {
+                document.getElementById('admin-view').classList.add('hidden');
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('public-view').classList.remove('hidden');
+                loadPublicPosts();
+            }
+        });
+
+        // ================= UI NAVIGATION =================
+        window.showLogin = function() {
+            if (currentUser) {
+                document.getElementById('public-view').classList.add('hidden');
+                document.getElementById('admin-view').classList.remove('hidden');
+            } else {
+                document.getElementById('public-view').classList.add('hidden');
+                document.getElementById('login-view').classList.remove('hidden');
+            }
+        }
+
+        window.showPublic = function() {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('public-view').classList.remove('hidden');
+        }
+
+        window.switchAdminTab = function(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.admin-tab[data-tab="${tab}"]`).classList.add('active');
+            
+            document.getElementById('tab-posts').classList.toggle('hidden', tab !== 'posts');
+            document.getElementById('tab-submissions').classList.toggle('hidden', tab !== 'submissions');
+        }
+
+        // ================= QUILL EDITOR SETUP =================
+        function initQuillEditors() {
+            // Public submission editor (limited toolbar)
+            publicQuill = new Quill('#public-quill-editor', {
+                theme: 'snow',
+                placeholder: 'Write your story here... You can use bold, italic, lists, etc.',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+            
+            // Admin editor (full toolbar)
+            adminQuill = new Quill('#admin-quill-editor', {
+                theme: 'snow',
+                placeholder: 'Write the historical content...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['blockquote', 'code-block'],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // Sync Quill content to hidden inputs
+            publicQuill.on('text-change', () => {
+                document.getElementById('submit-content').value = publicQuill.root.innerHTML;
+            });
+            adminQuill.on('text-change', () => {
+                document.getElementById('post-content').value = adminQuill.root.innerHTML;
+            });
+        }
+
+        // ================= IMAGE UPLOAD =================
+        function setupImageUpload(dropZoneId, fileInputId, previewId, progressId, progressBarId, setErrorCallback, isPublic = false) {
+            const dropZone = document.getElementById(dropZoneId);
+            const fileInput = document.getElementById(fileInputId);
+            const preview = document.getElementById(previewId);
+            const progress = document.getElementById(progressId);
+            const progressBar = document.getElementById(progressBarId);
+
+            // Click to upload
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            // File selection
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleFileSelect(file, preview, progress, progressBar, setErrorCallback, isPublic);
+            });
+
+            // Drag & drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'));
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'));
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                const file = e.dataTransfer.files[0];
+                if (file) handleFileSelect(file, preview, progress, progressBar, setErrorCallback, isPublic);
+            });
+        }
+
+        function handleFileSelect(file, preview, progress, progressBar, setErrorCallback, isPublic) {
+            // Validate
+            if (!file.type.startsWith('image/')) {
+                setErrorCallback && setErrorCallback('Please select an image file (JPG, PNG, GIF)');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                setErrorCallback && setErrorCallback('Image must be under 5MB');
+                return;
+            }
+
+            // Preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            // Store for upload
+            if (isPublic) {
+                publicSelectedFile = file;
+            } else {
+                adminSelectedFile = file;
+            }
+        }
+
+        async function uploadImage(file, path) {
+            return new Promise((resolve, reject) => {
+                const storageRef = ref(storage, path);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        // Progress handled by caller via callback
+                    },
+                    (error) => reject(error),
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(resolve).catch(reject);
+                    }
+                );
+            });
+        }
+
+        // ================= PUBLIC POSTS =================
+        function loadPublicPosts() {
+            document.getElementById('loading-public').classList.remove('hidden');
+            document.getElementById('public-grid').innerHTML = '';
+
+            const q = query(postsCollection, orderBy('createdAt', 'desc'));
+            
+            unsubscribePosts = onSnapshot(q, (snapshot) => {
+                document.getElementById('loading-public').classList.add('hidden');
+                const grid = document.getElementById('public-grid');
+                grid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">No historical posts yet. Be the first to share!</p>';
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => {
+                    const post = { id: docSnap.id, ...docSnap.data() };
+                    const card = document.createElement('article');
+                    card.className = 'history-card';
+                    
+                    const imageUrl = post.imageUrl || '';
+                    const imageHtml = imageUrl ? `<img src="${imageUrl}" class="card-image" alt="${escapeHtml(post.title)}">` : '';
+                    
+                    card.innerHTML = `
+                        ${imageHtml}
+                        <div class="card-date">${escapeHtml(post.date || 'Unknown')}</div>
+                        <div class="card-content">
+                            <h3>${escapeHtml(post.title || 'Untitled')}</h3>
+                            <div class="ql-editor">${post.content || ''}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }, (error) => {
+                console.error("Error loading posts:", error);
+                document.getElementById('loading-public').textContent = '⚠️ Error loading history. Please refresh.';
+            });
+        }
+
+        // ================= ADMIN: PUBLISHED POSTS =================
+        function loadPublishedPosts() {
+            document.getElementById('loading-admin-posts').classList.remove('hidden');
+            document.getElementById('admin-posts-body').innerHTML = '';
+
+            const q = query(postsCollection, orderBy('createdAt', 'desc'));
+            
+            unsubscribePosts = onSnapshot(q, (snapshot) => {
+                document.getElementById('loading-admin-posts').classList.add('hidden');
+                const tbody = document.getElementById('admin-posts-body');
+                tbody.innerHTML = '';
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 30px;">No published posts yet. <button class="btn btn-success btn-sm" onclick="openPostModal()">Create One</button></td></tr>';
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => {
+                    const post = { id: docSnap.id, ...docSnap.data() };
+                    const row = document.createElement('tr');
+                    
+                    const thumbUrl = post.imageUrl || '';
+                    const thumbHtml = thumbUrl ? `<img src="${thumbUrl}" alt="thumb">` : '<span style="color:#999">No image</span>';
+                    
+                    const preview = stripHtml(post.content || '').substring(0, 100) + '...';
+                    
+                    row.innerHTML = `
+                        <td>${thumbHtml}</td>
+                        <td>${escapeHtml(post.date || '—')}</td>
+                        <td><strong>${escapeHtml(post.title || 'Untitled')}</strong></td>
+                        <td>${escapeHtml(preview)}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm action-btn" onclick="editPost('${post.id}')">✏️ Edit</button>
+                            <button class="btn btn-danger btn-sm action-btn" onclick="deletePost('${post.id}')">🗑️ Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }, (error) => {
+                console.error("Error loading posts:", error);
+                document.getElementById('loading-admin-posts').textContent = 'Error loading posts.';
+            });
+        }
+
+        // ================= ADMIN: SUBMISSIONS =================
+        function loadSubmissions() {
+            document.getElementById('loading-admin-subs').classList.remove('hidden');
+            document.getElementById('admin-subs-body').innerHTML = '';
+
+            const q = query(submissionsCollection, orderBy('submittedAt', 'desc'));
+            
+            unsubscribeSubs = onSnapshot(q, (snapshot) => {
+                document.getElementById('loading-admin-subs').classList.add('hidden');
+                const tbody = document.getElementById('admin-subs-body');
+                tbody.innerHTML = '';
+                
+                // Update pending count
+                const pending = snapshot.docs.filter(d => d.data().status === 'pending').length;
+                document.getElementById('pending-count').textContent = pending;
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 30px;">No submissions yet.</td></tr>';
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => {
+                    const sub = { id: docSnap.id, ...docSnap.data() };
+                    const row = document.createElement('tr');
+                    
+                    const preview = stripHtml(sub.content || '').substring(0, 80) + '...';
+                    const statusBadge = `<span class="badge badge-${sub.status || 'pending'}">${(sub.status || 'pending').toUpperCase()}</span>`;
+                    
+                    row.innerHTML = `
+                        <td>${escapeHtml(sub.submitterName || 'Anonymous')}</td>
+                        <td>${escapeHtml(sub.date || '—')}</td>
+                        <td><strong>${escapeHtml(sub.title || 'Untitled')}</strong></td>
+                        <td>${escapeHtml(preview)}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm action-btn" onclick="reviewSubmission('${sub.id}')">👁️ Review</button>
+                            ${sub.status === 'pending' ? `<button class="btn btn-danger btn-sm action-btn" onclick="deleteSubmission('${sub.id}')">🗑️ Delete</button>` : ''}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }, (error) => {
+                console.error("Error loading submissions:", error);
+                document.getElementById('loading-admin-subs').textContent = 'Error loading submissions.';
+            });
+        }
+
+        // ================= POST CRUD =================
+        window.openPostModal = function(postId = null) {
+            document.getElementById('post-id').value = postId || '';
+            document.getElementById('post-date').value = '';
+            document.getElementById('post-title').value = '';
+            adminQuill.root.innerHTML = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-image-url').value = '';
+            document.getElementById('admin-image-preview').style.display = 'none';
+            document.getElementById('admin-image-preview').src = '';
+            document.getElementById('image-error').classList.add('hidden');
+            document.getElementById('save-status').textContent = '';
+            document.getElementById('modal-title').innerText = postId ? "✏️ Edit Post" : "✨ Create New Post";
+            document.getElementById('post-modal').classList.remove('hidden');
+            
+            // If editing, load data
+            if (postId) loadPostData(postId);
+        }
+
+        async function loadPostData(postId) {
+            try {
+                const docSnap = await getDoc(doc(db, "posts", postId));
+                if (docSnap.exists()) {
+                    const post = docSnap.data();
+                    document.getElementById('post-date').value = post.date || '';
+                    document.getElementById('post-title').value = post.title || '';
+                    adminQuill.root.innerHTML = post.content || '';
+                    document.getElementById('post-content').value = post.content || '';
+                    if (post.imageUrl) {
+                        document.getElementById('post-image-url').value = post.imageUrl;
+                        document.getElementById('admin-image-preview').src = post.imageUrl;
+                        document.getElementById('admin-image-preview').style.display = 'block';
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading post:", err);
+                alert("Could not load post data");
+            }
+        }
+
+        window.savePost = async function() {
+            const id = document.getElementById('post-id').value;
+            const date = document.getElementById('post-date').value.trim();
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            const imageUrl = document.getElementById('post-image-url').value;
+            const btn = document.getElementById('save-btn');
+            const status = document.getElementById('save-status');
+
+            if (!title || !content) { 
+                showStatus(status, "Title and content are required", "error");
+                return; 
+            }
+
+            btn.disabled = true;
+            showStatus(status, "Saving...", "info");
+
+            try {
+                // Upload image if selected
+                let finalImageUrl = imageUrl;
+                if (adminSelectedFile) {
+                    showStatus(status, "Uploading image...", "info");
+                    const fileName = `post-images/${Date.now()}_${adminSelectedFile.name}`;
+                    finalImageUrl = await uploadImage(adminSelectedFile, fileName);
+                    showStatus(status, "Image uploaded!", "success");
+                    
+                    // Delete old image if updating
+                    if (id && imageUrl && imageUrl.includes('firebasestorage')) {
+                        try {
+                            const oldRef = ref(storage, imageUrl);
+                            await deleteObject(oldRef);
+                        } catch (e) { console.log("Could not delete old image:", e); }
+                    }
+                }
+
+                const postData = {
+                    date,
+                    title,
+                    content,
+                    imageUrl: finalImageUrl,
+                    updatedAt: serverTimestamp()
+                };
+
+                if (id) {
+                    await updateDoc(doc(db, "posts", id), postData);
+                    showStatus(status, "✅ Post updated!", "success");
+                } else {
+                    postData.createdAt = serverTimestamp();
+                    await addDoc(postsCollection, postData);
+                    showStatus(status, "✅ Post published!", "success");
+                }
+                
+                setTimeout(() => {
+                    closeModal('post-modal');
+                    adminSelectedFile = null;
+                }, 1200);
+                
+            } catch (error) {
+                console.error("Error saving post:", error);
+                showStatus(status, "❌ Error: " + error.message, "error");
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        window.deletePost = async function(id) {
+            if(!confirm("⚠️ Delete this post permanently? This cannot be undone.")) return;
+            
+            try {
+                // Delete associated image
+                const postRef = doc(db, "posts", id);
+                const snap = await getDoc(postRef);
+                if (snap.exists()) {
+                    const imageUrl = snap.data().imageUrl;
+                    if (imageUrl && imageUrl.includes('firebasestorage')) {
+                        try {
+                            const imgRef = ref(storage, imageUrl);
+                            await deleteObject(imgRef);
+                        } catch (e) { console.log("Could not delete image:", e); }
+                    }
+                }
+                
+                await deleteDoc(postRef);
+                alert("✅ Post deleted");
+            } catch (error) {
+                console.error("Error deleting post:", error);
+                alert("❌ Failed to delete: " + error.message);
+            }
+        }
+
+        window.editPost = function(id) {
+            openPostModal(id);
+        }
+
+        // ================= SUBMISSIONS =================
+        // Public form submission
+        document.getElementById('public-submission-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('submit-name').value.trim();
+            const email = document.getElementById('submit-email').value.trim();
+            const date = document.getElementById('submit-date').value.trim();
+            const title = document.getElementById('submit-title').value.trim();
+            const content = document.getElementById('submit-content').value.trim();
+            const consent = document.getElementById('submit-consent').checked;
+            const statusEl = document.getElementById('submit-status');
+            const btn = document.getElementById('submit-btn');
+
+            if (!name || !date || !title || !content || !consent) {
+                showStatus(statusEl, "Please fill all required fields and accept the consent", "error");
+                return;
+            }
+
+            btn.disabled = true;
+            showStatus(statusEl, "Submitting...", "info");
+
+            try {
+                // Upload image if selected
+                let imageUrl = '';
+                if (publicSelectedFile) {
+                    showStatus(statusEl, "Uploading image...", "info");
+                    const fileName = `submission-images/${Date.now()}_${publicSelectedFile.name}`;
+                    imageUrl = await uploadImage(publicSelectedFile, fileName);
+                }
+
+                await addDoc(submissionsCollection, {
+                    submitterName: name,
+                    submitterEmail: email,
+                    date,
+                    title,
+                    content,
+                    imageUrl,
+                    status: 'pending',
+                    submittedAt: serverTimestamp()
+                });
+
+                showStatus(statusEl, "✅ Thank you! Your story has been submitted for review.", "success");
+                document.getElementById('public-submission-form').reset();
+                publicQuill.root.innerHTML = '';
+                document.getElementById('submit-content').value = '';
+                document.getElementById('public-image-preview').style.display = 'none';
+                publicSelectedFile = null;
+                
+            } catch (error) {
+                console.error("Submission error:", error);
+                showStatus(statusEl, "❌ Submission failed: " + error.message, "error");
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // Admin: Review submission
+        window.reviewSubmission = async function(id) {
+            try {
+                const docSnap = await getDoc(doc(db, "submissions", id));
+                if (!docSnap.exists()) return;
+                
+                const sub = { id: docSnap.id, ...docSnap.data() };
+                
+                document.getElementById('review-id').value = sub.id;
+                document.getElementById('review-name').textContent = sub.submitterName || 'Anonymous';
+                document.getElementById('review-email').textContent = sub.submitterEmail || 'N/A';
+                document.getElementById('review-date').textContent = sub.date || '—';
+                document.getElementById('review-title').textContent = sub.title || 'Untitled';
+                document.getElementById('review-content').innerHTML = sub.content || '';
+                
+                const imgEl = document.getElementById('review-image');
+                const noImgEl = document.getElementById('review-no-image');
+                if (sub.imageUrl) {
+                    imgEl.src = sub.imageUrl;
+                    imgEl.style.display = 'block';
+                    noImgEl.style.display = 'none';
+                } else {
+                    imgEl.style.display = 'none';
+                    noImgEl.style.display = 'block';
+                }
+                
+                const submittedAt = sub.submittedAt?.toDate ? sub.submittedAt.toDate().toLocaleString() : 'Unknown';
+                document.getElementById('review-submitted').textContent = submittedAt;
+                
+                document.getElementById('review-status').textContent = '';
+                document.getElementById('review-modal').classList.remove('hidden');
+                
+            } catch (err) {
+                console.error("Error loading submission:", err);
+                alert("Could not load submission");
+            }
+        }
+
+        window.approveSubmission = async function() {
+            const id = document.getElementById('review-id').value;
+            const statusEl = document.getElementById('review-status');
+            
+            showStatus(statusEl, "Publishing...", "info");
+            
+            try {
+                // Get submission data
+                const docSnap = await getDoc(doc(db, "submissions", id));
+                if (!docSnap.exists()) throw new Error("Submission not found");
+                
+                const sub = docSnap.data();
+                
+                // Create published post
+                await addDoc(postsCollection, {
+                    date: sub.date,
+                    title: sub.title,
+                    content: sub.content,
+                    imageUrl: sub.imageUrl,
+                    source: `Submitted by ${sub.submitterName}`,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                
+                // Update submission status
+                await updateDoc(doc(db, "submissions", id), {
+                    status: 'approved',
+                    reviewedAt: serverTimestamp()
+                });
+                
+                showStatus(statusEl, "✅ Approved & published!", "success");
+                setTimeout(() => {
+                    closeModal('review-modal');
+                }, 1000);
+                
+            } catch (error) {
+                console.error("Error approving:", error);
+                showStatus(statusEl, "❌ Error: " + error.message, "error");
+            }
+        }
+
+        window.rejectSubmission = async function() {
+            const id = document.getElementById('review-id').value;
+            if (!confirm("Reject this submission? It will be marked as rejected.")) return;
+            
+            try {
+                await updateDoc(doc(db, "submissions", id), {
+                    status: 'rejected',
+                    reviewedAt: serverTimestamp()
+                });
+                alert("✅ Submission rejected");
+                closeModal('review-modal');
+            } catch (error) {
+                console.error("Error rejecting:", error);
+                alert("❌ Failed: " + error.message);
+            }
+        }
+
+        window.deleteSubmission = async function(id) {
+            if(!confirm("⚠️ Permanently delete this submission?")) return;
+            
+            try {
+                // Delete image if exists
+                const snap = await getDoc(doc(db, "submissions", id));
+                if (snap.exists()) {
+                    const imageUrl = snap.data().imageUrl;
+                    if (imageUrl && imageUrl.includes('firebasestorage')) {
+                        try {
+                            await deleteObject(ref(storage, imageUrl));
+                        } catch (e) { console.log("Could not delete image:", e); }
+                    }
+                }
+                
+                await deleteDoc(doc(db, "submissions", id));
+                alert("✅ Submission deleted");
+            } catch (error) {
+                console.error("Error deleting submission:", error);
+                alert("❌ Failed: " + error.message);
+            }
+        }
+
+        // ================= UTILITIES =================
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            // Clear file selections when closing modals
+            if (modalId === 'post-modal') {
+                adminSelectedFile = null;
+                document.getElementById('admin-image-preview').style.display = 'none';
+            }
+            if (modalId === 'review-modal') {
+                document.getElementById('review-status').textContent = '';
+            }
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    if (modal.id === 'post-modal') {
+                        adminSelectedFile = null;
+                        document.getElementById('admin-image-preview').style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        function showStatus(element, message, type) {
+            element.textContent = message;
+            element.className = `status-msg status-${type}`;
+            element.classList.remove('hidden');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+
+        // ================= INITIALIZATION =================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Initialize Quill editors
+            initQuillEditors();
+            
+            // Setup image uploads
+            setupImageUpload(
+                'public-drop-zone', 'public-image-input', 'public-image-preview',
+                'public-upload-progress', 'public-progress-bar',
+                (msg) => showStatus(document.getElementById('submit-status'), msg, 'error'),
+                true // isPublic
+            );
+            
+            setupImageUpload(
+                'admin-drop-zone', 'admin-image-input', 'admin-image-preview',
+                'admin-upload-progress', 'admin-progress-bar',
+                (msg) => {
+                    document.getElementById('image-error').textContent = msg;
+                    document.getElementById('image-error').classList.remove('hidden');
+                },
+                false // isAdmin
+            );
+            
+            // Load initial view
+            if (!currentUser) {
+                loadPublicPosts();
+            }
+        });
+
+        // Cleanup listeners on unload
+        window.addEventListener('beforeunload', () => {
+            if (unsubscribePosts) unsubscribePosts();
+            if (unsubscribeSubs) unsubscribeSubs();
+        });
+
+        // Make functions globally available
+        window.closeModal = closeModal;
+    </script>
+    
+    <!-- Quill.js Library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    
+    <!-- Fallback for non-module browsers -->
+    <script nomodule>
+        alert("⚠️ This app requires a modern browser that supports ES6 modules. Please update your browser.");
+    </script>
+</body>
+</html>
+
+
+
+              <script>
+                                  rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        // Public posts - anyone can read, only admins can write
+        match /posts/{postId} {
+          allow read: if true;
+          allow write: if request.auth != null;
+        }
+        // User submissions - anyone can create, only admins can read/write
+        match /submissions/{submissionId} {
+          allow read, write: if request.auth != null;
+          allow create: if true;
+        }
+      }
+    }
+    
+    rules_version = '2';
+    service firebase.storage {
+      match /b/{bucket}/o {
+        match /post-images/{imageId} {
+          allow read: if true;
+          allow write: if request.auth != null;
+        }
+      }
+    }
+    
+
+              </script>
+                        </body>
+                        </html>
+                    
